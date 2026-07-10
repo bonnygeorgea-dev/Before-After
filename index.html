@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Before / After Maker · EMD-KOR</title>
+<title>Before / After Maker · Batch · EMD-KOR</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23006B99'/%3E%3Ctext x='32' y='42' font-size='30' font-family='Arial' font-weight='bold' text-anchor='middle' fill='white'%3EBA%3C/text%3E%3C/svg%3E">
 <style>
   :root{ --teal:#006B99; --teal-d:#00527a; --grey:#595959; --line:#e2e6ea; --bg:#f4f6f8; --safe:env(safe-area-inset-bottom,0px); }
@@ -19,68 +19,83 @@
   .wrap{ max-width:1000px; margin:0 auto; padding:14px; }
   .card{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:14px;
          box-shadow:0 1px 3px rgba(0,0,0,.04); }
-  .drops{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .drop{ border:2px dashed #c3ccd4; border-radius:12px; min-height:150px; display:flex; flex-direction:column;
-         align-items:center; justify-content:center; text-align:center; padding:12px; cursor:pointer;
-         background:#fafbfc; transition:.15s; position:relative; overflow:hidden; }
-  .drop:hover{ border-color:var(--teal); background:#f0f8fc; }
-  .drop.filled{ border-style:solid; border-color:var(--teal); padding:0; background:#000; }
-  .drop.dragover{ border-color:var(--teal); background:#e6f4fb; }
-  .drop .tag{ position:absolute; top:8px; left:8px; background:var(--teal); color:#fff; font-size:11px;
-              font-weight:700; padding:3px 9px; border-radius:6px; z-index:2; }
-  .drop img{ max-width:100%; max-height:230px; display:block; }
-  .drop .hint{ color:#7a848d; font-size:13px; line-height:1.35; }
-  .drop .hint b{ color:var(--teal); }
-  .drop .clear{ position:absolute; top:8px; right:8px; background:rgba(0,0,0,.6); color:#fff; border:none;
-                width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; z-index:3; line-height:1;
-                display:flex; align-items:center; justify-content:center; }
+  .ctitle{ font-size:11px; font-weight:700; color:var(--grey); text-transform:uppercase; letter-spacing:.5px; margin:0 0 12px; }
   .controls{ display:flex; flex-wrap:wrap; gap:14px 16px; align-items:flex-end; }
   .fld{ display:flex; flex-direction:column; gap:5px; }
   .fld label{ font-size:11px; font-weight:700; color:var(--grey); text-transform:uppercase; letter-spacing:.4px; }
-  .fld input[type=text]{ padding:11px 12px; border:1px solid #cdd4da; border-radius:9px; font-size:16px; width:160px; }
+  .fld input[type=text]{ padding:11px 12px; border:1px solid #cdd4da; border-radius:9px; font-size:16px; width:150px; }
   .fld input[type=text]:focus{ outline:none; border-color:var(--teal); box-shadow:0 0 0 3px rgba(0,107,153,.15); }
   .seg{ display:inline-flex; border:1px solid #cdd4da; border-radius:9px; overflow:hidden; }
   .seg button{ border:none; background:#fff; padding:11px 14px; font-size:14px; cursor:pointer; color:#444; min-height:44px; }
   .seg button.on{ background:var(--teal); color:#fff; font-weight:700; }
   .chk{ display:flex; align-items:center; gap:9px; font-size:14px; cursor:pointer; min-height:40px; }
   .chk input{ width:20px; height:20px; accent-color:var(--teal); }
-  .btns{ display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
-  button.act{ border:none; border-radius:10px; padding:13px 18px; font-size:15px; font-weight:700; cursor:pointer; min-height:48px; }
+
+  /* pairs */
+  .pair{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px;
+         box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .pairhead{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .pnum{ font-weight:700; color:var(--teal); font-size:14px; }
+  .ptools{ display:flex; gap:6px; }
+  .ic{ width:38px; height:38px; border:1px solid #d5dbe0; background:#fff; border-radius:9px; font-size:16px;
+       cursor:pointer; color:#555; display:flex; align-items:center; justify-content:center; }
+  .ic:hover{ background:#f0f8fc; border-color:var(--teal); color:var(--teal); }
+  .ic.del:hover{ background:#fdecec; border-color:#e05555; color:#e05555; }
+  .ic:active{ transform:scale(.95); }
+  .drops{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .drop{ border:2px dashed #c3ccd4; border-radius:11px; min-height:118px; display:flex; flex-direction:column;
+         align-items:center; justify-content:center; text-align:center; padding:10px; cursor:pointer;
+         background:#fafbfc; transition:.15s; position:relative; overflow:hidden; }
+  .drop:hover{ border-color:var(--teal); background:#f0f8fc; }
+  .drop.filled{ border-style:solid; border-color:var(--teal); padding:0; background:#000; min-height:0; }
+  .drop.dragover{ border-color:var(--teal); background:#e6f4fb; }
+  .drop .tag{ position:absolute; top:7px; left:7px; background:var(--teal); color:#fff; font-size:10px;
+              font-weight:700; padding:3px 8px; border-radius:6px; z-index:2; letter-spacing:.3px; }
+  .drop img{ max-width:100%; max-height:150px; display:block; }
+  .drop .hint{ color:#7a848d; font-size:12px; line-height:1.4; }
+  .drop .hint b{ color:var(--teal); }
+  .drop .clear{ position:absolute; top:7px; right:7px; background:rgba(0,0,0,.6); color:#fff; border:none;
+                width:32px; height:32px; border-radius:50%; font-size:19px; cursor:pointer; z-index:3;
+                display:flex; align-items:center; justify-content:center; }
+  .pairPreview{ margin:10px 0; text-align:center; background:#eceff2; border-radius:10px; padding:8px;
+                min-height:56px; display:flex; align-items:center; justify-content:center; }
+  .pairPreview canvas{ max-width:100%; height:auto; border-radius:5px; box-shadow:0 2px 8px rgba(0,0,0,.16); }
+  .phint{ color:#9aa3ab; font-size:12px; }
+
+  .btns{ display:flex; flex-wrap:wrap; gap:10px; }
+  button.act{ border:none; border-radius:10px; padding:13px 18px; font-size:15px; font-weight:700; cursor:pointer;
+              min-height:48px; display:inline-flex; align-items:center; justify-content:center; gap:6px; }
+  button.act.mini{ padding:11px 14px; font-size:14px; min-height:44px; flex:1; }
   .primary{ background:var(--teal); color:#fff; } .primary:hover{ background:var(--teal-d); }
   .ghost{ background:#fff; color:var(--teal); border:1.5px solid var(--teal) !important; }
-  .ghost:hover{ background:#f0f8fc; }
   .sec{ background:#eef1f4; color:#444; } .sec:hover{ background:#e2e6ea; }
+  .wa{ background:#25D366; color:#fff; } .wa:hover{ background:#1ebe5b; }
+  .wa svg{ width:19px; height:19px; }
   button.act:active{ transform:scale(.98); }
   button.act:disabled{ opacity:.45; cursor:not-allowed; }
-  .previewBox{ text-align:center; background:#eceff2; border:1px solid var(--line); border-radius:12px;
-               padding:12px; min-height:120px; display:flex; align-items:center; justify-content:center; }
-  #preview{ max-width:100%; height:auto; border-radius:6px; box-shadow:0 3px 12px rgba(0,0,0,.18); }
-  .empty{ color:#8a939b; font-size:13px; }
+
+  #addPair{ width:100%; border:1.5px dashed var(--teal); background:#f0f8fc; color:var(--teal); border-radius:12px;
+            padding:15px; font-weight:700; font-size:15px; cursor:pointer; margin-bottom:14px; min-height:50px; }
+  #addPair:hover{ background:#e3f2fb; }
   .note{ font-size:12px; color:#8a939b; margin-top:8px; }
   footer{ text-align:center; color:#8a939b; font-size:11.5px; padding:18px 12px 6px; }
   .toast{ position:fixed; bottom:calc(20px + var(--safe)); left:50%; transform:translateX(-50%); background:#222; color:#fff;
-          padding:11px 20px; border-radius:24px; font-size:14px; opacity:0; pointer-events:none; transition:.25s; z-index:99; }
+          padding:11px 20px; border-radius:24px; font-size:14px; opacity:0; pointer-events:none; transition:.25s; z-index:99;
+          max-width:90%; text-align:center; }
   .toast.show{ opacity:1; }
 
-  /* ---------- MOBILE ---------- */
   @media(max-width:640px){
     .wrap{ padding:10px; }
-    .card{ padding:12px; border-radius:11px; margin-bottom:11px; }
-    .drop{ min-height:128px; }
-    .drop img{ max-height:180px; }
-    .drop .hint{ font-size:12px; }
-    .controls{ gap:14px; }
+    .card,.pair{ padding:12px; border-radius:11px; }
     .fld{ flex:1 1 100%; }
     .fld input[type=text]{ width:100%; }
-    .seg{ width:100%; }
-    .seg button{ flex:1; }
+    .seg{ width:100%; } .seg button{ flex:1; }
     .chk{ flex:1 1 100%; }
-    .card .btns .act{ flex:1 1 auto; }
-    /* sticky export bar always in thumb reach */
     #exportBar{ position:fixed; left:0; right:0; bottom:0; margin:0; z-index:20;
                 padding:10px 12px calc(10px + var(--safe)); background:#fff;
-                border-top:1px solid var(--line); box-shadow:0 -3px 12px rgba(0,0,0,.1); }
+                border-top:1px solid var(--line); box-shadow:0 -3px 12px rgba(0,0,0,.1); border-radius:0; }
     #exportBar .act{ flex:1; }
+    #exportCard{ padding:0; border:none; box-shadow:none; background:transparent; }
     #exportNote{ display:none; }
     body{ padding-bottom:calc(78px + var(--safe)); }
   }
@@ -95,26 +110,9 @@
 
 <div class="wrap">
 
+  <!-- GLOBAL SETTINGS -->
   <div class="card">
-    <div class="drops">
-      <div class="drop" id="dropA" data-slot="A">
-        <span class="tag">BEFORE</span>
-        <div class="hint">Tap or drop the <b>Before</b> photo</div>
-        <input type="file" accept="image/*" hidden>
-      </div>
-      <div class="drop" id="dropB" data-slot="B">
-        <span class="tag">AFTER</span>
-        <div class="hint">Tap or drop the <b>After</b> photo</div>
-        <input type="file" accept="image/*" hidden>
-      </div>
-    </div>
-    <div class="btns">
-      <button class="act sec" id="swapBtn">⇄ Swap Before / After</button>
-      <button class="act sec" id="resetBtn">Reset</button>
-    </div>
-  </div>
-
-  <div class="card">
+    <p class="ctitle">Settings — apply to all pairs</p>
     <div class="controls">
       <div class="fld">
         <label>Layout</label>
@@ -147,245 +145,340 @@
     </div>
   </div>
 
-  <div class="card">
-    <div class="previewBox">
-      <canvas id="preview"></canvas>
-      <div class="empty" id="emptyMsg">Add both photos to see the preview</div>
-    </div>
+  <!-- PAIRS -->
+  <div id="pairs"></div>
+  <button id="addPair">➕ Add another pair</button>
+
+  <!-- GLOBAL EXPORT -->
+  <div class="card" id="exportCard">
     <div class="btns" id="exportBar">
-      <button class="act primary" id="downloadBtn" disabled>⬇ Download PNG</button>
-      <button class="act ghost" id="copyBtn" disabled>📋 Copy image</button>
+      <button class="act wa" id="waAll" disabled>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.2s-.8 1-.9 1.1c-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5 4.5.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.4zM12 2a10 10 0 00-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1012 2z"/></svg>
+        WhatsApp all<span id="waCount"></span>
+      </button>
+      <button class="act primary" id="dlAll" disabled>⬇ Download all</button>
     </div>
-    <div class="note" id="exportNote">Everything runs on this device — your photos are never uploaded anywhere.</div>
+    <div class="note" id="exportNote">Runs entirely on this device — photos are never uploaded. "Download all" saves each pair as a separate PNG.</div>
   </div>
 
-  <footer>
-    Bonny George · MGP, Koratty Plant &nbsp;·&nbsp; <span id="foot"></span>
-  </footer>
+  <footer>Bonny George · MGP, Koratty Plant &nbsp;·&nbsp; <span id="foot"></span></footer>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
 /* ============ CONFIG ============ */
-const APP_VERSION = 'v1.1';
-const LAST_UPDATED = '09 Jul 2026';
-const CELL = 1400;      // per-cell long-side target (px) for output quality
+const APP_VERSION = 'v2.0';
+const LAST_UPDATED = '10 Jul 2026';
+const OUTPUT = 1300;   // per-cell output size (px)
+const MAXSRC = 1600;   // cap source photos to keep phones stable
+const WA_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.2s-.8 1-.9 1.1c-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5 4.5.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.4zM12 2a10 10 0 00-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1012 2z"/></svg>';
+
 document.getElementById('verlabel').textContent = APP_VERSION;
 document.getElementById('foot').textContent = APP_VERSION + ' · ' + LAST_UPDATED;
 
 /* ============ STATE ============ */
-const state = { imgA:null, imgB:null, layout:'h', fit:'cover' };
-const canvas = document.getElementById('preview');
-const ctx = canvas.getContext('2d');
+const state = { layout:'h', fit:'cover' };
+const pairs = [];
+let idc = 0;
+const pairsEl = document.getElementById('pairs');
 
-/* ============ FILE HANDLING ============ */
-function wireDrop(id){
-  const el = document.getElementById(id);
-  const input = el.querySelector('input');
-  const slot = el.dataset.slot;
-  el.addEventListener('click', e=>{ if(e.target.classList.contains('clear')) return; input.click(); });
-  input.addEventListener('change', e=>{ if(e.target.files[0]) loadFile(e.target.files[0], slot); input.value=''; });
-  el.addEventListener('dragover', e=>{ e.preventDefault(); el.classList.add('dragover'); });
-  el.addEventListener('dragleave', ()=> el.classList.remove('dragover'));
-  el.addEventListener('drop', e=>{
-    e.preventDefault(); el.classList.remove('dragover');
-    const f = e.dataTransfer.files[0];
-    if(f && f.type.startsWith('image/')) loadFile(f, slot);
-  });
+/* ============ CONFIG READERS ============ */
+function dateStr(){
+  const d = new Date();
+  const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return String(d.getDate()).padStart(2,'0')+'-'+M[d.getMonth()]+'-'+d.getFullYear();
 }
-wireDrop('dropA'); wireDrop('dropB');
+function getConfig(){
+  let wm = document.getElementById('wmText').value.trim();
+  if(document.getElementById('showDate').checked) wm = wm ? (wm+'   ·   '+dateStr()) : dateStr();
+  return {
+    layout: state.layout, fit: state.fit,
+    labels: document.getElementById('showLabels').checked,
+    la: document.getElementById('labelA').value.trim(),
+    lb: document.getElementById('labelB').value.trim(),
+    wm
+  };
+}
 
-function loadFile(file, slot){
+/* ============ DRAW HELPERS ============ */
+function drawFit(ctx, img, x, y, w, h, mode){
+  ctx.save();
+  ctx.beginPath(); ctx.rect(x,y,w,h); ctx.clip();
+  ctx.fillStyle = '#000'; ctx.fillRect(x,y,w,h);
+  const iw = img.naturalWidth, ih = img.naturalHeight;
+  const scale = (mode==='cover') ? Math.max(w/iw,h/ih) : Math.min(w/iw,h/ih);
+  const dw = iw*scale, dh = ih*scale;
+  ctx.drawImage(img, x+(w-dw)/2, y+(h-dh)/2, dw, dh);
+  ctx.restore();
+}
+function drawLabel(ctx, text, x, y, cellH){
+  if(!text) return;
+  const fs = Math.round(cellH*0.085), pad = Math.round(cellH*0.035);
+  ctx.font = '700 '+fs+'px -apple-system,"Segoe UI",Arial,sans-serif';
+  ctx.textAlign='left'; ctx.textBaseline='top';
+  ctx.shadowColor='rgba(0,0,0,0.65)'; ctx.shadowBlur=fs*0.18; ctx.shadowOffsetX=2; ctx.shadowOffsetY=3;
+  ctx.lineWidth=fs*0.10; ctx.strokeStyle='rgba(0,0,0,0.55)';
+  ctx.strokeText(text, x+pad, y+pad);
+  ctx.fillStyle='#fff'; ctx.fillText(text, x+pad, y+pad);
+  ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+}
+function drawComposite(canvas, imgA, imgB, cfg, cell){
+  const ctx = canvas.getContext('2d');
+  const refAspect = imgA.naturalWidth/imgA.naturalHeight;
+  const gap = 8;
+  let cellW, cellH, cw, ch, wmH;
+  if(cfg.layout==='h'){
+    cellH = cell; cellW = Math.round(cellH*refAspect);
+    cw = cellW*2+gap; wmH = cfg.wm ? Math.round(cw*0.042) : 0; ch = cellH+wmH;
+  } else {
+    cellW = Math.round(cell*Math.max(refAspect,0.55)); cellH = Math.round(cellW/refAspect);
+    cw = cellW; wmH = cfg.wm ? Math.round(cw*0.055) : 0; ch = cellH*2+gap+wmH;
+  }
+  canvas.width = cw; canvas.height = ch;
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,cw,ch);
+  if(cfg.layout==='h'){
+    drawFit(ctx,imgA,0,0,cellW,cellH,cfg.fit);
+    drawFit(ctx,imgB,cellW+gap,0,cellW,cellH,cfg.fit);
+    ctx.fillStyle='#fff'; ctx.fillRect(cellW,0,gap,cellH);
+    if(cfg.labels){ drawLabel(ctx,cfg.la,0,0,cellH); drawLabel(ctx,cfg.lb,cellW+gap,0,cellH); }
+  } else {
+    drawFit(ctx,imgA,0,0,cellW,cellH,cfg.fit);
+    drawFit(ctx,imgB,0,cellH+gap,cellW,cellH,cfg.fit);
+    ctx.fillStyle='#fff'; ctx.fillRect(0,cellH,cellW,gap);
+    if(cfg.labels){ drawLabel(ctx,cfg.la,0,0,cellH); drawLabel(ctx,cfg.lb,0,cellH+gap,cellH); }
+  }
+  if(cfg.wm){
+    ctx.fillStyle='#006B99'; ctx.fillRect(0,ch-wmH,cw,wmH);
+    const fs = Math.round(wmH*0.46);
+    ctx.font='700 '+fs+'px -apple-system,"Segoe UI",Arial,sans-serif';
+    ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    if('letterSpacing' in ctx) ctx.letterSpacing=(fs*0.12)+'px';
+    ctx.fillText(cfg.wm.toUpperCase(), cw/2, ch-wmH/2+1);
+    if('letterSpacing' in ctx) ctx.letterSpacing='0px';
+  }
+}
+
+/* ============ SLOTS ============ */
+function setSlotEmpty(pair, slot){
+  const el = pair['drop'+slot];
+  const tag = slot==='A' ? 'BEFORE' : 'AFTER';
+  const which = slot==='A' ? 'Before' : 'After';
+  el.className = 'drop';
+  el.innerHTML = '<span class="tag">'+tag+'</span><div class="hint">Tap or drop<br><b>'+which+'</b></div><input type="file" accept="image/*" hidden>';
+  wireSlot(pair, slot);
+}
+function setSlotFilled(pair, slot, src){
+  const el = pair['drop'+slot];
+  const tag = slot==='A' ? 'BEFORE' : 'AFTER';
+  el.className = 'drop filled';
+  el.innerHTML = '<span class="tag">'+tag+'</span><button class="clear" type="button">×</button><img src="'+src+'"><input type="file" accept="image/*" hidden>';
+  wireSlot(pair, slot);
+}
+function wireSlot(pair, slot){
+  const el = pair['drop'+slot];
+  const input = el.querySelector('input');
+  el.onclick = e=>{ if(e.target.classList.contains('clear')) return; input.click(); };
+  input.onchange = e=>{ if(e.target.files[0]) loadIntoPair(e.target.files[0], pair, slot); e.target.value=''; };
+  el.ondragover = e=>{ e.preventDefault(); el.classList.add('dragover'); };
+  el.ondragleave = ()=> el.classList.remove('dragover');
+  el.ondrop = e=>{ e.preventDefault(); el.classList.remove('dragover');
+    const f = e.dataTransfer.files[0]; if(f && f.type.startsWith('image/')) loadIntoPair(f, pair, slot); };
+  const clr = el.querySelector('.clear');
+  if(clr) clr.onclick = ev=>{ ev.stopPropagation(); pair['img'+slot]=null; setSlotEmpty(pair,slot); renderPair(pair); updateGlobal(); };
+}
+function downscale(img, max){
+  const w = img.naturalWidth, h = img.naturalHeight;
+  if(Math.max(w,h) <= max) return img.src;
+  const s = max/Math.max(w,h);
+  const c = document.createElement('canvas');
+  c.width = Math.round(w*s); c.height = Math.round(h*s);
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  return c.toDataURL('image/jpeg',0.9);
+}
+function loadIntoPair(file, pair, slot){
   const reader = new FileReader();
   reader.onload = ev=>{
     const img = new Image();
-    img.onload = ()=>{ state['img'+slot] = img; showThumb(slot, ev.target.result); render(); };
+    img.onload = ()=>{
+      const src = downscale(img, MAXSRC);
+      const fimg = new Image();
+      fimg.onload = ()=>{ pair['img'+slot]=fimg; setSlotFilled(pair,slot,src); renderPair(pair); updateGlobal(); };
+      fimg.src = src;
+    };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-function showThumb(slot, src){
-  const el = document.getElementById('drop'+slot);
-  const tagText = slot==='A' ? 'BEFORE' : 'AFTER';
-  el.classList.add('filled');
-  el.innerHTML = '<span class="tag">'+tagText+'</span>'+
-                 '<button class="clear" title="Remove">×</button>'+
-                 '<img src="'+src+'">';
-  el.querySelector('.clear').addEventListener('click', ev=>{
-    ev.stopPropagation(); clearSlot(slot);
+/* ============ PAIR LIFECYCLE ============ */
+function addPair(){
+  const id = ++idc;
+  const div = document.createElement('div');
+  div.className = 'pair'; div.dataset.id = id;
+  div.innerHTML =
+    '<div class="pairhead"><span class="pnum"></span>'+
+      '<div class="ptools">'+
+        '<button class="ic up" title="Move up">↑</button>'+
+        '<button class="ic down" title="Move down">↓</button>'+
+        '<button class="ic swap" title="Swap before/after">⇄</button>'+
+        '<button class="ic del" title="Delete pair">🗑</button>'+
+      '</div></div>'+
+    '<div class="drops"><div class="drop dA"></div><div class="drop dB"></div></div>'+
+    '<div class="pairPreview"><canvas style="display:none"></canvas><div class="phint">Add both photos</div></div>'+
+    '<div class="btns pairExport">'+
+      '<button class="act wa mini pwa" disabled>'+WA_SVG+'WhatsApp</button>'+
+      '<button class="act primary mini pdl" disabled>⬇ Download</button>'+
+    '</div>';
+  const pair = { id, imgA:null, imgB:null, el:div };
+  pair.dropA = div.querySelector('.dA');
+  pair.dropB = div.querySelector('.dB');
+  pair.canvas = div.querySelector('canvas');
+  pair.phint = div.querySelector('.phint');
+  pair.waBtn = div.querySelector('.pwa');
+  pair.dlBtn = div.querySelector('.pdl');
+  pairs.push(pair);
+  pairsEl.appendChild(div);
+  setSlotEmpty(pair,'A'); setSlotEmpty(pair,'B');
+  div.querySelector('.up').onclick   = ()=> movePair(pair,-1);
+  div.querySelector('.down').onclick = ()=> movePair(pair, 1);
+  div.querySelector('.swap').onclick = ()=> swapPair(pair);
+  div.querySelector('.del').onclick  = ()=> deletePair(pair);
+  pair.waBtn.onclick = ()=> sharePair(pair);
+  pair.dlBtn.onclick = ()=> downloadPair(pair);
+  renumber(); updateGlobal();
+  return pair;
+}
+function deletePair(pair){
+  const i = pairs.indexOf(pair);
+  if(i<0) return;
+  pairs.splice(i,1); pair.el.remove();
+  if(pairs.length===0) addPair();
+  renumber(); updateGlobal();
+}
+function movePair(pair, dir){
+  const i = pairs.indexOf(pair), j = i+dir;
+  if(j<0 || j>=pairs.length) return;
+  pairs.splice(i,1); pairs.splice(j,0,pair);
+  if(dir<0) pairsEl.insertBefore(pair.el, pairs[j+1] ? pairs[j+1].el : null);
+  else pairsEl.insertBefore(pair.el, pairs[j+1] ? pairs[j+1].el : null);
+  renumber();
+}
+function swapPair(pair){
+  const a = pair.imgA, b = pair.imgB;
+  pair.imgA = b; pair.imgB = a;
+  if(pair.imgA) setSlotFilled(pair,'A',pair.imgA.src); else setSlotEmpty(pair,'A');
+  if(pair.imgB) setSlotFilled(pair,'B',pair.imgB.src); else setSlotEmpty(pair,'B');
+  renderPair(pair);
+}
+function renumber(){
+  pairs.forEach((p,i)=> p.el.querySelector('.pnum').textContent = 'Pair '+(i+1));
+}
+
+/* ============ RENDER ============ */
+function renderPair(pair){
+  const ok = pair.imgA && pair.imgB;
+  pair.waBtn.disabled = !ok; pair.dlBtn.disabled = !ok;
+  if(ok){
+    drawComposite(pair.canvas, pair.imgA, pair.imgB, getConfig(), OUTPUT);
+    pair.canvas.style.display = 'block'; pair.phint.style.display = 'none';
+  } else {
+    pair.canvas.style.display = 'none'; pair.phint.style.display = 'block';
+  }
+}
+function renderAll(){ pairs.forEach(renderPair); }
+function updateGlobal(){
+  const n = pairs.filter(p=>p.imgA&&p.imgB).length;
+  document.getElementById('waAll').disabled = n===0;
+  document.getElementById('dlAll').disabled = n===0;
+  document.getElementById('waCount').textContent = n ? ' ('+n+')' : '';
+}
+
+/* ============ EXPORT ============ */
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+function stamp(){
+  const d = new Date();
+  return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+
+         '_'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0');
+}
+function dlFile(file){
+  const url = URL.createObjectURL(file);
+  const a = document.createElement('a');
+  a.href = url; a.download = file.name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+function pairFile(pair, i){
+  return new Promise(res=>{
+    pair.canvas.toBlob(b=>res(new File([b],'BeforeAfter_EMD-KOR_'+stamp()+'_'+i+'.png',{type:'image/png'})),'image/png');
   });
 }
-
-function clearSlot(slot){
-  state['img'+slot] = null;
-  const el = document.getElementById('drop'+slot);
-  const tagText = slot==='A' ? 'BEFORE' : 'AFTER';
-  const which  = slot==='A' ? 'Before' : 'After';
-  el.classList.remove('filled');
-  el.innerHTML = '<span class="tag">'+tagText+'</span>'+
-                 '<div class="hint">Tap or drop the <b>'+which+'</b> photo</div>'+
-                 '<input type="file" accept="image/*" hidden>';
-  el.querySelector('input').addEventListener('change', e=>{ if(e.target.files[0]) loadFile(e.target.files[0], slot); e.target.value=''; });
-  render();
+async function sharePair(pair){
+  const i = pairs.indexOf(pair)+1;
+  const f = await pairFile(pair,i);
+  if(navigator.canShare && navigator.canShare({files:[f]})){
+    try{ await navigator.share({files:[f],title:'Before / After',text:'Before / After — EMD-KOR'}); toast('Shared ✓'); }
+    catch(e){ if(e.name!=='AbortError') toast('Share cancelled'); }
+    return;
+  }
+  dlFile(f); window.open('https://web.whatsapp.com/','_blank'); toast('Saved ✓ — attach in WhatsApp');
+}
+async function downloadPair(pair){
+  const i = pairs.indexOf(pair)+1;
+  dlFile(await pairFile(pair,i)); toast('Downloaded ✓');
+}
+async function whatsappAll(){
+  const done = pairs.filter(p=>p.imgA&&p.imgB);
+  if(!done.length) return;
+  const files = [];
+  for(let i=0;i<done.length;i++) files.push(await pairFile(done[i], i+1));
+  if(navigator.canShare && navigator.canShare({files})){
+    try{ await navigator.share({files,title:'Before / After',text:'Before / After — EMD-KOR'}); toast('Shared '+files.length+' ✓'); }
+    catch(e){ if(e.name!=='AbortError') toast('Share cancelled'); }
+    return;
+  }
+  for(const f of files){ dlFile(f); await sleep(400); }
+  window.open('https://web.whatsapp.com/','_blank');
+  toast('Saved '+files.length+' — attach in WhatsApp');
+}
+async function downloadAll(){
+  const done = pairs.filter(p=>p.imgA&&p.imgB);
+  if(!done.length) return;
+  for(let i=0;i<done.length;i++){ dlFile(await pairFile(done[i], i+1)); await sleep(400); }
+  toast('Downloaded '+done.length+' ✓');
 }
 
-/* ============ CONTROLS ============ */
+/* ============ CONTROLS WIRING ============ */
 function wireSeg(id, key){
   document.querySelectorAll('#'+id+' button').forEach(b=>{
     b.addEventListener('click', ()=>{
       document.querySelectorAll('#'+id+' button').forEach(x=>x.classList.remove('on'));
-      b.classList.add('on'); state[key]=b.dataset.v; render();
+      b.classList.add('on'); state[key]=b.dataset.v; renderAll();
     });
   });
 }
 wireSeg('layoutSeg','layout');
 wireSeg('fitSeg','fit');
 ['labelA','labelB','wmText','showLabels','showDate'].forEach(id=>{
-  document.getElementById(id).addEventListener('input', render);
-  document.getElementById(id).addEventListener('change', render);
+  document.getElementById(id).addEventListener('input', renderAll);
+  document.getElementById(id).addEventListener('change', renderAll);
 });
-document.getElementById('swapBtn').addEventListener('click', ()=>{
-  const a = state.imgA, b = state.imgB;
-  if(a) showThumb('A', b?b.src:'' ); // placeholder handled below
-  // simplest: swap sources and rebuild thumbs
-  const asrc = a?a.src:null, bsrc = b?b.src:null;
-  if(asrc) { state.imgB = a; showThumb('B', asrc); } else clearSlot('B');
-  if(bsrc) { state.imgA = b; showThumb('A', bsrc); } else clearSlot('A');
-  render();
+document.getElementById('addPair').addEventListener('click', ()=>{
+  const p = addPair(); p.el.scrollIntoView({behavior:'smooth', block:'center'});
 });
-document.getElementById('resetBtn').addEventListener('click', ()=>{ clearSlot('A'); clearSlot('B'); });
-document.getElementById('downloadBtn').addEventListener('click', download);
-document.getElementById('copyBtn').addEventListener('click', copyImg);
-
-/* ============ DRAW HELPERS ============ */
-function drawFit(img, x, y, w, h, mode){
-  ctx.save();
-  ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
-  ctx.fillStyle = '#000'; ctx.fillRect(x, y, w, h);
-  const iw = img.naturalWidth, ih = img.naturalHeight;
-  let scale = (mode==='cover') ? Math.max(w/iw, h/ih) : Math.min(w/iw, h/ih);
-  const dw = iw*scale, dh = ih*scale;
-  ctx.drawImage(img, x + (w-dw)/2, y + (h-dh)/2, dw, dh);
-  ctx.restore();
-}
-
-function drawLabel(text, x, y, cellH){
-  if(!text) return;
-  const fs = Math.round(cellH * 0.085);
-  const pad = Math.round(cellH * 0.035);
-  ctx.font = '700 ' + fs + 'px -apple-system, "Segoe UI", Arial, sans-serif';
-  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-  ctx.shadowColor = 'rgba(0,0,0,0.65)';
-  ctx.shadowBlur = fs*0.18; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 3;
-  ctx.lineWidth = fs*0.10; ctx.strokeStyle = 'rgba(0,0,0,0.55)';
-  ctx.strokeText(text, x+pad, y+pad);
-  ctx.fillStyle = '#ffffff';
-  ctx.fillText(text, x+pad, y+pad);
-  ctx.shadowColor = 'transparent'; ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
-}
-
-/* ============ RENDER ============ */
-function render(){
-  const a = state.imgA, b = state.imgB;
-  const ready = a && b;
-  document.getElementById('downloadBtn').disabled = !ready;
-  document.getElementById('copyBtn').disabled = !ready || !navigator.clipboard || !window.ClipboardItem;
-  document.getElementById('emptyMsg').style.display = ready ? 'none' : 'block';
-  canvas.style.display = ready ? 'block' : 'none';
-  if(!ready) return;
-
-  const showLabels = document.getElementById('showLabels').checked;
-  const labelA = document.getElementById('labelA').value.trim();
-  const labelB = document.getElementById('labelB').value.trim();
-  let wm = document.getElementById('wmText').value.trim();
-  if(document.getElementById('showDate').checked){
-    const d = new Date();
-    const ds = String(d.getDate()).padStart(2,'0')+'-'+
-               ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+'-'+d.getFullYear();
-    wm = wm ? (wm + '   ·   ' + ds) : ds;
-  }
-
-  // reference aspect from the BEFORE image
-  const refAspect = a.naturalWidth / a.naturalHeight;
-  const gap = 8;
-  let cellW, cellH, canvasW, canvasH, wmH;
-
-  if(state.layout === 'h'){
-    cellH = CELL;
-    cellW = Math.round(cellH * refAspect);
-    canvasW = cellW*2 + gap;
-    wmH = wm ? Math.round(canvasW * 0.042) : 0;
-    canvasH = cellH + wmH;
-  } else {
-    cellW = Math.round(CELL * Math.max(refAspect, 0.55));
-    cellH = Math.round(cellW / refAspect);
-    canvasW = cellW;
-    wmH = wm ? Math.round(canvasW * 0.055) : 0;
-    canvasH = cellH*2 + gap + wmH;
-  }
-
-  canvas.width = canvasW; canvas.height = canvasH;
-  ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,canvasW,canvasH);
-
-  if(state.layout === 'h'){
-    drawFit(a, 0, 0, cellW, cellH, state.fit);
-    drawFit(b, cellW+gap, 0, cellW, cellH, state.fit);
-    ctx.fillStyle = '#ffffff'; ctx.fillRect(cellW, 0, gap, cellH); // divider
-    if(showLabels){ drawLabel(labelA, 0, 0, cellH); drawLabel(labelB, cellW+gap, 0, cellH); }
-  } else {
-    drawFit(a, 0, 0, cellW, cellH, state.fit);
-    drawFit(b, 0, cellH+gap, cellW, cellH, state.fit);
-    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, cellH, cellW, gap);
-    if(showLabels){ drawLabel(labelA, 0, 0, cellH); drawLabel(labelB, 0, cellH+gap, cellH); }
-  }
-
-  // watermark strip
-  if(wm){
-    ctx.fillStyle = '#006B99';
-    ctx.fillRect(0, canvasH - wmH, canvasW, wmH);
-    const fs = Math.round(wmH * 0.46);
-    ctx.font = '700 ' + fs + 'px -apple-system, "Segoe UI", Arial, sans-serif';
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.letterSpacing && (ctx.letterSpacing = (fs*0.12)+'px');
-    ctx.fillText(wm.toUpperCase(), canvasW/2, canvasH - wmH/2 + 1);
-    ctx.letterSpacing && (ctx.letterSpacing = '0px');
-  }
-}
-
-/* ============ EXPORT ============ */
-function stamp(){
-  const d = new Date();
-  return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+
-         '_'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0');
-}
-function download(){
-  canvas.toBlob(blob=>{
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'BeforeAfter_EMD-KOR_' + stamp() + '.png';
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url), 4000);
-    toast('Downloaded ✓');
-  }, 'image/png');
-}
-async function copyImg(){
-  try{
-    const blob = await new Promise(r=>canvas.toBlob(r,'image/png'));
-    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
-    toast('Copied — paste into WhatsApp ✓');
-  }catch(e){ toast('Copy not supported here — use Download'); }
-}
+document.getElementById('waAll').addEventListener('click', whatsappAll);
+document.getElementById('dlAll').addEventListener('click', downloadAll);
 
 /* ============ TOAST ============ */
 let toastT;
 function toast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('show'), 2200);
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('show'),2200);
 }
+
+/* ============ INIT ============ */
+addPair();
 </script>
 </body>
 </html>
